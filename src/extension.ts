@@ -1,3 +1,5 @@
+import { dirname } from "path";
+import { mkdirSync } from "fs";
 import * as jsonFile from 'jsonfile';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
@@ -21,6 +23,11 @@ const addToLocaleFile = (placeholder: string, text: string, translationFile: str
 
 		return translationFile;
 	});
+};
+
+const createIfNotExist = (translationFile: string) => {
+	const directory = dirname(translationFile);
+	return mkdirSync(directory);
 };
 
 // this method is called when your extension is activated
@@ -74,14 +81,16 @@ export function activate(context: vscode.ExtensionContext) {
 			const config = vscode.workspace.getConfiguration('i18nGrabber');
 			const translationFile = config.get('translationFileLocation', 'locale/en.json').toString();
 
+			createIfNotExist(translationFile);
+
 			addToLocaleFile(placeholder, text, translationFile).then((file: string) => {
 
 				vscode.window.showInformationMessage(
-					`Added placeholder ${placeholder} to ${file}`
+					`Added placeholder ${placeholder} to ${translationFile}`
 				);
+			}).catch((error) => {
+				vscode.window.showErrorMessage(error);
 			});
-
-
 		});
 	});
 
