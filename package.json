@@ -1,6 +1,7 @@
 {
 	"name": "i18ngrabber",
 	"displayName": "i18nGrabber",
+	"repository": "https://github.com/schtibe/i18ngrabber",
 	"publisher": "heine",
 	"description": "Grabs a String and puts it into the translation files",
 	"version": "0.0.1",
