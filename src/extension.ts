@@ -65,7 +65,7 @@ const replaceString = (
 
   const replaceTemplate = getConfigString(
     "replaceTemplate",
-    "{{ $t(<placeholder>) }}",
+    '{{ $t("<placeholder>") }}',
   );
 
   const replacedString = replaceTemplate.replace("<placeholder>", placeholder);

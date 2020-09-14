@@ -24,7 +24,7 @@
 				},
 				"i18nGrabber.replaceTemplate": {
 					"type": "string",
-					"default": "{{ $t(<placeholder>) }}",
+					"default": "{{ $t(\"<placeholder>\") }}",
 					"description": "The template for the replacement. Must include <placeholder> to indicate, where the placeholder is to be inserted"
 				}
 			}
