@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
       const translationFile = getConfigString(
         "translationFileLocation",
-        "locale/en.json",
+        "src/locales/en.json",
       );
 
       try {

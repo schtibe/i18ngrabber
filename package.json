@@ -1,6 +1,7 @@
 {
 	"name": "i18ngrabber",
 	"displayName": "i18nGrabber",
+	"publisher": "heine",
 	"description": "Grabs a String and puts it into the translation files",
 	"version": "0.0.1",
 	"engines": {
@@ -19,7 +20,7 @@
 			"properties": {
 				"i18nGrabber.translationFileLocation": {
 					"type": "string",
-					"default": "locale/de.json",
+					"default": "src/locales/en.json",
 					"description": "Path to your translation file"
 				},
 				"i18nGrabber.replaceTemplate": {

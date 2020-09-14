@@ -31,7 +31,7 @@ The dot notated strings will be split into the the nested object format:
 
 This extension contributes the following settings:
 
-* `i18nGrabber.translationFileLocation`: Configure the path to the default translation file, e.g. `locale/en.json`
+* `i18nGrabber.translationFileLocation`: Configure the path to the default translation file, e.g. `src/locales/en.json`
 * `i18nGrabber.replaceTemplate`: Configure the replace template. Default is `{{ $t("<placeholder>") }}` where `<placeholder>` is being replaced by the string 
 
 
