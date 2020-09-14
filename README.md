@@ -1,6 +1,6 @@
-# i18ngrabber README
+# i18nGrabber README
 
-This is the README for your extension "i18ngrabber". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "i18nGrabber". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

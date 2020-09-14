@@ -1,5 +1,5 @@
 import { dirname } from "path";
-import { mkdirSync } from "fs";
+import { mkdirSync, existsSync } from "fs";
 import * as jsonFile from "jsonfile";
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
@@ -36,15 +36,50 @@ const addToLocaleFile = (
   });
 };
 
-const createIfNotExist = (translationFile: string) => {
+const getConfigString = (name: string, _default: string) => {
+  const config = vscode.workspace.getConfiguration("i18nGrabber");
+  const configString = config.get(name, _default).toString();
+
+  return configString;
+};
+
+const createIfNotExist = (translationFile: string): void => {
   const directory = dirname(translationFile);
-  return mkdirSync(directory);
+
+  if (!existsSync(directory)) {
+    mkdirSync(directory);
+  }
+};
+
+const getPlaceholder = (): Thenable<string | undefined> => {
+  return vscode.window.showInputBox({
+    value: "Enter The name of the placeholder",
+  });
+};
+
+const replaceString = (
+  selection: vscode.Selection,
+  placeholder: string,
+): void => {
+  const editor = vscode.window.activeTextEditor;
+
+  const replaceTemplate = getConfigString(
+    "replaceTemplate",
+    "{{ $t(<placeholder>) }}",
+  );
+
+  const replacedString = replaceTemplate.replace("<placeholder>", placeholder);
+
+  editor?.edit((editBuilder) => {
+    const newString = replacedString;
+    editBuilder.replace(selection, newString);
+  });
 };
 
 export function activate(context: vscode.ExtensionContext): void {
   const disposable = vscode.commands.registerCommand(
-    "i18ngrabber.grabtext",
-    () => {
+    "i18nGrabber.grabtext",
+    async () => {
       const editor = vscode.window.activeTextEditor;
 
       if (!editor) {
@@ -59,43 +94,36 @@ export function activate(context: vscode.ExtensionContext): void {
         return;
       }
 
-      vscode.window
-        .showInputBox({
-          value: "Enter The name of the placeholder",
-        })
-        .then((placeholder) => {
-          if (!placeholder) {
-            // TODO error handling
-            return;
-          }
+      const placeholder = await getPlaceholder();
 
-          // Display a message box to the user
-          vscode.window.showInformationMessage(
-            "Selected text:" + text + " input " + placeholder,
-          );
+      if (!placeholder) {
+        vscode.window.showErrorMessage("Please enter a placeholder name");
+        return;
+      }
 
-          editor?.edit((editBuilder) => {
-            const newString = `{{ $t('${placeholder}') }}`;
-            editBuilder.replace(selection, newString);
-          });
+      const translationFile = getConfigString(
+        "translationFileLocation",
+        "locale/en.json",
+      );
 
-          const config = vscode.workspace.getConfiguration("i18nGrabber");
-          const translationFile = config
-            .get("translationFileLocation", "locale/en.json")
-            .toString();
+      try {
+        replaceString(selection, placeholder);
+      } catch (error) {
+        vscode.window.showErrorMessage("Error replacing the string " + error);
+      }
 
-          createIfNotExist(translationFile);
+      createIfNotExist(translationFile);
 
-          addToLocaleFile(placeholder, text, translationFile)
-            .then(() => {
-              vscode.window.showInformationMessage(
-                `Added placeholder ${placeholder} to ${translationFile}`,
-              );
-            })
-            .catch((error) => {
-              vscode.window.showErrorMessage(error);
-            });
-        });
+      try {
+        await addToLocaleFile(placeholder, text, translationFile);
+        vscode.window.showInformationMessage(
+          `Added placeholder ${placeholder} to ${translationFile}`,
+        );
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          "Could not write the translation to the file: " + error,
+        );
+      }
     },
   );
 

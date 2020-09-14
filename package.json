@@ -1,6 +1,6 @@
 {
 	"name": "i18ngrabber",
-	"displayName": "i18ngrabber",
+	"displayName": "i18nGrabber",
 	"description": "Grabs a String and puts it into the translation files",
 	"version": "0.0.1",
 	"engines": {
@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:i18ngrabber.grabtext"
+		"onCommand:i18nGrabber.grabtext"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -21,12 +21,17 @@
 					"type": "string",
 					"default": "locale/de.json",
 					"description": "Path to your translation file"
+				},
+				"i18nGrabber.replaceTemplate": {
+					"type": "string",
+					"default": "{{ $t(<placeholder>) }}",
+					"description": "The template for the replacement. Must include <placeholder> to indicate, where the placeholder is to be inserted"
 				}
 			}
 		},
 		"commands": [
 			{
-				"command": "i18ngrabber.grabtext",
+				"command": "i18nGrabber.grabtext",
 				"title": "Grab text to be translated"
 			}
 		]
