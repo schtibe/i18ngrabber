@@ -14,6 +14,16 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "i18nGrabber",
+			"properties": {
+				"i18nGrabber.translationFileLocation": {
+					"type": "string",
+					"default": "locale/de.json",
+					"description": "Path to your translation file"
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "i18ngrabber.grabtext",

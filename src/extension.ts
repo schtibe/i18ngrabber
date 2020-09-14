@@ -5,26 +5,15 @@ import * as vscode from 'vscode';
 
 const set = require('lodash.set');
 
-/**
- * Write a translation to it's corresponding file
- * @param  {String} locale       e.g. 'de'
- * @param  {String} key          e.g 'page.dashboard.title'
- * @param  {String} translation  The translation for <key>
- * @param  {String} dir          Directory to write files to
- * @return {Promise}
- */
-const writeTranslationsToDisk = (locale: string, key: string, translation: string, dir: string): Promise<string> => {
+const addToLocaleFile = (placeholder: string, text: string, translationFile: string): Promise<string> => {
 	return new Promise((resolve, reject) => {
-		let translationFile: string;
-
-		translationFile = `${dir}/${locale}.json`;
 
 		jsonFile.readFile(translationFile, (e: any, obj: any) => {
 			/* eslint-disable no-irregular-whitespace */
 			obj = obj || {};
 
 			// this will transform dot notation
-			set(obj, key, translation);
+			set(obj, placeholder, text);
 
 			jsonFile.writeFile(translationFile, obj, { spaces: 4 }, (err: any) => { reject(err); });
 			resolve();
@@ -32,12 +21,6 @@ const writeTranslationsToDisk = (locale: string, key: string, translation: strin
 
 		return translationFile;
 	});
-};
-
-const addToLocaleFile = (placeholder: string, text: string) => {
-	return writeTranslationsToDisk(
-		'de', placeholder, text, 'locale/'
-	);
 };
 
 // this method is called when your extension is activated
@@ -88,8 +71,11 @@ export function activate(context: vscode.ExtensionContext) {
 				);
 			});
 
+			const config = vscode.workspace.getConfiguration('i18nGrabber');
+			const translationFile = config.get('translationFileLocation', 'locale/en.json').toString();
 
-			addToLocaleFile(placeholder, text).then((file: string) => {
+			addToLocaleFile(placeholder, text, translationFile).then((file: string) => {
+
 				vscode.window.showInformationMessage(
 					`Added placeholder ${placeholder} to ${file}`
 				);
