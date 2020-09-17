@@ -1,4 +1,4 @@
-import { dirname } from "path";
+import * as path from "path";
 import { mkdirSync, existsSync } from "fs";
 import { cwd } from "process";
 import * as jsonFile from "jsonfile";
@@ -45,7 +45,7 @@ const getConfigString = (name: string, _default: string) => {
 };
 
 const createIfNotExist = (translationFile: string): void => {
-  const directory = dirname(translationFile);
+  const directory = path.dirname(translationFile);
 
   if (!existsSync(directory)) {
     mkdirSync(directory);
@@ -107,8 +107,18 @@ export function activate(context: vscode.ExtensionContext): void {
         "src/locales/en.json",
       );
 
+      if (!vscode.workspace.rootPath) {
+        vscode.window.showErrorMessage("Could not determine workspace path.");
+        return;
+      }
+
+      const translationFilePath = path.join(
+        vscode.workspace.rootPath,
+        translationFile,
+      );
+
       try {
-        createIfNotExist(translationFile);
+        createIfNotExist(translationFilePath);
       } catch (error) {
         vscode.window.showErrorMessage(
           `Could not create file in ${cwd()}: ${error}`,
@@ -123,7 +133,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
 
       try {
-        await addToLocaleFile(placeholder, text, translationFile);
+        await addToLocaleFile(placeholder, text, translationFilePath);
         vscode.window.showInformationMessage(
           `Added placeholder ${placeholder} to ${translationFile}`,
         );
