@@ -1,5 +1,6 @@
 import { dirname } from "path";
 import { mkdirSync, existsSync } from "fs";
+import { cwd } from "process";
 import * as jsonFile from "jsonfile";
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
@@ -107,12 +108,19 @@ export function activate(context: vscode.ExtensionContext): void {
       );
 
       try {
+        createIfNotExist(translationFile);
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          `Could not create file in ${cwd()}: ${error}`,
+        );
+        return;
+      }
+
+      try {
         replaceString(selection, placeholder);
       } catch (error) {
         vscode.window.showErrorMessage("Error replacing the string " + error);
       }
-
-      createIfNotExist(translationFile);
 
       try {
         await addToLocaleFile(placeholder, text, translationFile);
