@@ -42,6 +42,8 @@ This extension contributes the following settings:
 * `i18nGrabber.translationFileLocation`: Configure the path to the default translation file, e.g. `src/locales/en.json`
 * `i18nGrabber.replaceTemplate`: Configure the replace template. Default is `{{ $t("<placeholder>") }}` where `<placeholder>` is being replaced by the string 
 
+It is advised to set those settings in the workspace context.
+
 
 ## Release Notes
 
