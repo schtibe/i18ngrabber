@@ -25,7 +25,15 @@ The dot notated strings will be split into the the nested object format:
         "title": "My Title"
     }
 }
+
+
 ```
+
+## Installation
+
+Use following command to install the extension:
+
+`code --install-extension i18ngrabber-0.0.1.vsix` 
 
 ## Extension Settings
 
